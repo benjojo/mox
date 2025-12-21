@@ -734,7 +734,7 @@ func PrepareStaticConfig(ctx context.Context, log mlog.Log, configFile string, c
 	var haveUnspecifiedSMTPListener bool
 	for name, l := range c.Listeners {
 		addListenerErrorf := func(format string, args ...any) {
-			addErrorf("listener %s: %s", name, fmt.Sprintf(format, args...))
+			addErrorf("listener %s: %w", name, fmt.Errorf(format, args...))
 		}
 
 		if l.Hostname != "" {
@@ -1228,7 +1228,7 @@ func prepareDynamicConfig(ctx context.Context, log mlog.Log, dynamicPath string,
 	c.ClientSettingDomains = map[dns.Domain]struct{}{}
 	for d, domain := range c.Domains {
 		addDomainErrorf := func(format string, args ...any) {
-			addErrorf(fmt.Sprintf("domain %v: %s", d, fmt.Sprintf(format, args...)))
+			addErrorf("domain %v: %s", d, fmt.Sprintf(format, args...))
 		}
 
 		dnsdomain, err := dns.ParseDomain(d)
@@ -1364,7 +1364,7 @@ func prepareDynamicConfig(ctx context.Context, log mlog.Log, dynamicPath string,
 
 		if domain.MTASTS != nil {
 			if !haveSTSListener {
-				addDomainErrorf("MTA-STS enabled, but there is no listener for MTASTS", d)
+				addDomainErrorf("MTA-STS enabled, but there is no listener for MTASTS")
 			}
 			sts := domain.MTASTS
 			if sts.PolicyID == "" {
@@ -2020,7 +2020,7 @@ func prepareDynamicConfig(ctx context.Context, log mlog.Log, dynamicPath string,
 				case "", "/":
 					u.Path = "/"
 				default:
-					addHandlerErrorf("redirect: BaseURL must have empty path", wr.BaseURL)
+					addHandlerErrorf("redirect: BaseURL must have empty path: %s", wr.BaseURL)
 				}
 				wr.URL = u
 			}
