@@ -16,6 +16,7 @@ TESTFLAGS = $(TESTFLAGS_RACE) $(TESTFLAGS_CPU) $(EXTRA_TESTFLAGS)
 
 TESTFLAGS_TIMEOUT=30m
 ifdef TIMEOUT
+<<<<<<< HEAD
 	TESTFLAGS_TIMEOUT=$(TIMEOUT)
 endif
 
@@ -27,6 +28,11 @@ endif
 .EXPORT_ALL_VARIABLES:
 TEST_ENABLE_STRICT_MODE=${TESTFLAGS_ENABLE_STRICT_MODE}
 
+=======
+       TESTFLAGS_TIMEOUT=$(TIMEOUT)
+endif
+
+>>>>>>> fork/ben-v0.0.15
 .PHONY: fmt
 fmt:
 	@echo "Verifying gofmt, failures can be fixed with ./scripts/fix.sh"
@@ -42,6 +48,7 @@ lint:
 .PHONY: test
 test:
 	@echo "hashmap freelist test"
+<<<<<<< HEAD
 	BBOLT_VERIFY=all TEST_FREELIST_TYPE=hashmap go test -v ${TESTFLAGS} -timeout ${TESTFLAGS_TIMEOUT}
 	BBOLT_VERIFY=all TEST_FREELIST_TYPE=hashmap go test -v ${TESTFLAGS} ./internal/...
 	BBOLT_VERIFY=all TEST_FREELIST_TYPE=hashmap go test -v ${TESTFLAGS} ./cmd/bbolt
@@ -50,6 +57,14 @@ test:
 	BBOLT_VERIFY=all TEST_FREELIST_TYPE=array go test -v ${TESTFLAGS} -timeout ${TESTFLAGS_TIMEOUT}
 	BBOLT_VERIFY=all TEST_FREELIST_TYPE=array go test -v ${TESTFLAGS} ./internal/...
 	BBOLT_VERIFY=all TEST_FREELIST_TYPE=array go test -v ${TESTFLAGS} ./cmd/bbolt
+=======
+	TEST_FREELIST_TYPE=hashmap go test -v ${TESTFLAGS} -timeout ${TESTFLAGS_TIMEOUT}
+	TEST_FREELIST_TYPE=hashmap go test -v ${TESTFLAGS} ./cmd/bbolt
+
+	@echo "array freelist test"
+	TEST_FREELIST_TYPE=array go test -v ${TESTFLAGS} -timeout ${TESTFLAGS_TIMEOUT}
+	TEST_FREELIST_TYPE=array go test -v ${TESTFLAGS} ./cmd/bbolt
+>>>>>>> fork/ben-v0.0.15
 
 .PHONY: coverage
 coverage:

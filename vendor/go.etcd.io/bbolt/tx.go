@@ -408,11 +408,16 @@ func (tx *Tx) WriteTo(w io.Writer) (n int64, err error) {
 		}
 
 		if ok, err := sameFile(tx.db.file, f); !ok {
+<<<<<<< HEAD
 			lg := tx.db.Logger()
 			if cerr := f.Close(); cerr != nil {
 				lg.Errorf("failed to close the file (%s): %v", tx.db.path, cerr)
 			}
 			lg.Warningf("The underlying file has changed, so reuse the already opened file (%s): %v", tx.db.path, err)
+=======
+			_ = f.Close() // ignore the error
+
+>>>>>>> fork/ben-v0.0.15
 			f = tx.db.file
 		} else {
 			defer func() {
@@ -602,6 +607,7 @@ func (tx *Tx) writeMeta() error {
 
 	// Write the meta page to file.
 	tx.db.metalock.Lock()
+<<<<<<< HEAD
 	if _, err := tx.db.ops.writeAt(buf, int64(p.Id())*int64(tx.db.pageSize)); err != nil {
 		tx.db.metalock.Unlock()
 		lg.Errorf("writeAt failed, pgid: %d, pageSize: %d, error: %v", p.Id(), tx.db.pageSize, err)
@@ -609,6 +615,14 @@ func (tx *Tx) writeMeta() error {
 	}
 	tx.db.metalock.Unlock()
 	if !tx.db.NoSync || common.IgnoreNoSync {
+=======
+	if _, err := tx.db.ops.writeAt(buf, int64(p.id)*int64(tx.db.pageSize)); err != nil {
+		tx.db.metalock.Unlock()
+		return err
+	}
+	tx.db.metalock.Unlock()
+	if !tx.db.NoSync || IgnoreNoSync {
+>>>>>>> fork/ben-v0.0.15
 		// gofail: var beforeSyncMetaPage struct{}
 		if err := fdatasync(tx.db); err != nil {
 			lg.Errorf("[GOOS: %s, GOARCH: %s] fdatasync failed: %w", runtime.GOOS, runtime.GOARCH, err)
